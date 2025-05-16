@@ -77,7 +77,7 @@
             font-size: 12px;
             padding: 20px;
             max-width: 600px;
-            line-height: 1.4;
+            animation: textGlow 2s infinite alternate;
         }
         .cursor {
             animation: cursorBlink 1s infinite;
@@ -159,6 +159,23 @@
             50% { text-shadow: 0 0 8px #00ff00; }
             100% { text-shadow: 0 0 4px #00ff00; }
         }
+        @keyframes textGlow {
+            from { text-shadow: 0 0 5px #00ff00; }
+            to { text-shadow: 0 0 15px #00ff00; }
+        }
+
+        /* 特殊链接样式 */
+        .colon-link {
+            color: #00ff00;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0 5px;
+        }
+        .colon-link:hover {
+            text-shadow: 0 0 15px #00ff00;
+            filter: brightness(1.2);
+            cursor: ne-resize;
+        }
 
         /* 装饰元素 */
         .corner {
@@ -204,11 +221,16 @@
         <div class="corner corner-br"></div>
         <div class="team male">♂ MALE</div>
         <div class="team female">♀ FEMALE</div>
-        <div class="score">1 : 4</div>
+        <div class="score">
+            1 <a href="https://voltastandardelectronics.com/login" 
+                target="_blank" 
+                class="colon-link"
+                title="Access Control Panel">:</a> 4
+        </div>
     </div>
     <div class="footer">
         <marquee behavior="scroll" direction="left">
-            [ SYSTEM: ONLINE ]  [ VERSION: 1.1 ]  [ BY:Nob0dyH3re ]  [ REFRESH: 60Hz ]
+            [ SYSTEM: ONLINE ]  [ VERSION: 1.1 ]  [ BY:NOB0DYH3RE ]  [ REFRESH: 60Hz ]
         </marquee>
     </div>
 
@@ -247,15 +269,15 @@
         // 启动动画
         const bootSequence = [
             {text: "> INITIALIZING TERMINAL SYSTEM...\n\n", delay: 1200},
-            {text: "[[[ SYSTEM DIAGNOSTICS ]]]\n", delay: 300},
-            {text: "▊ CPU: Z80 @ 4MHz\n▊ RAM: 512KB OK\n▊ VRAM: 64KB OK\n\n", delay: 500},
-            {text: "LOADING CORE MODULES ", dot: 5, delay: 150},
+            {text: "[[[ MEMORY CHECK ]]]\n", delay: 300},
+            {text: "▊ 640KB BASE RAM OK\n▊ VIDEO MEMORY OK\n▊ I/O CONTROLLER OK\n\n", delay: 500},
+            {text: "LOADING FIRMWARE ", dot: 3, delay: 150},
             {text: "DONE\n\n", delay: 800},
             {text: `
-            █▄░█ █▀█ █▄▄ █▀█ █▀▄ █▄█
-            █░▀█ █▄█ █▄█ █▄█ █▄▀ ░█░
+               █▄░█ █▀█ █▄▄ █▀█ █▀▄ █▄█
+               █░▀█ █▄█ █▄█ █▄█ █▄▀ ░█░ 
             `, delay: 1500},
-            {text: "\n> SYSTEM READY [PRESS ANY KEY TO START]", delay: 800}
+            {text: "\n> SYSTEM READY [TAP ANYWHERE TO START]", delay: 1000}
         ];
 
         async function playBootAnimation() {
@@ -274,21 +296,24 @@
                 }
                 await new Promise(r => setTimeout(r, step.delay));
             }
+        }
 
-            // 添加按键跳过
-            function skipAnimation() {
-                document.getElementById('bootScreen').style.display = 'none';
-                window.removeEventListener('keydown', skipAnimation);
-                window.removeEventListener('click', skipAnimation);
-            }
-            window.addEventListener('keydown', skipAnimation);
-            window.addEventListener('click', skipAnimation);
+        // 跳过动画功能
+        function skipAnimation(e) {
+            e.preventDefault();
+            document.getElementById('bootScreen').style.display = 'none';
+            window.removeEventListener('keydown', skipAnimation);
+            window.removeEventListener('click', skipAnimation);
+            window.removeEventListener('touchstart', skipAnimation);
         }
 
         // 初始化
         window.onload = () => {
             generateNoise();
             playBootAnimation();
+            window.addEventListener('keydown', skipAnimation);
+            window.addEventListener('click', skipAnimation);
+            window.addEventListener('touchstart', skipAnimation);
         }
     </script>
 </body>
